@@ -386,7 +386,7 @@ retry:
  * gfs2_jdata_writepages - Write a bunch of dirty pages back to disk
  * @mapping: The mapping to write
  * @wbc: The writeback control
- * 
+ *
  */
 
 static int gfs2_jdata_writepages(struct address_space *mapping,
@@ -900,7 +900,7 @@ failed:
  *
  * Returns: 1 if it dirtyed the page, or 0 otherwise
  */
- 
+
 static int gfs2_set_page_dirty(struct page *page)
 {
 	SetPageChecked(page);
@@ -1007,8 +1007,7 @@ static int gfs2_ok_for_dio(struct gfs2_inode *ip, int rw, loff_t offset)
 
 
 static ssize_t gfs2_direct_IO(int rw, struct kiocb *iocb,
-			      const struct iovec *iov, loff_t offset,
-			      unsigned long nr_segs)
+			      struct iov_iter *iter, loff_t offset)
 {
 	struct file *file = iocb->ki_filp;
 	struct inode *inode = file->f_mapping->host;
@@ -1062,8 +1061,8 @@ static ssize_t gfs2_direct_IO(int rw, struct kiocb *iocb,
 		truncate_inode_pages_range(mapping, lstart, end);
 	}
 
-	rv = __blockdev_direct_IO(rw, iocb, inode, inode->i_sb->s_bdev, iov,
-				  offset, nr_segs, gfs2_get_block_direct,
+	rv = __blockdev_direct_IO(rw, iocb, inode, inode->i_sb->s_bdev, iter,
+				  offset, gfs2_get_block_direct,
 				  NULL, NULL, 0);
 out:
 	gfs2_glock_dq_m(1, &gh);
