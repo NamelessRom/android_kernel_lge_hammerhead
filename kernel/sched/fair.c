@@ -4167,14 +4167,15 @@ static inline void fix_small_imbalance(struct sd_lb_stats *sds,
 	/* Amount of load we'd subtract */
 	if (sds->max_load > scaled_busy_load_per_task) {
 		pwr_move += sds->busiest->sgp->power *
-			min(sds->busiest_load_per_task,
+			min(scaled_busy_load_per_task,
 				sds->max_load - scaled_busy_load_per_task);
-		tmp = (sds->busiest_load_per_task * SCHED_POWER_SCALE) /
-			sds->this->sgp->power;
+		tmp = scaled_busy_load_per_task;
 	} else
-		tmp = (sds->max_load * sds->busiest->sgp->power) /
-			sds->this->sgp->power;
+		tmp = sds->max_load;
 
+	/* Scale to this queue from busiest queue */
+	tmp = (tmp * sds->busiest->sgp->power) /
+		sds->this->sgp->power;
 	/* Amount of load we'd add */
 	pwr_move += sds->this->sgp->power *
 			min(scaled_this_load_per_task, sds->this_load + tmp);
