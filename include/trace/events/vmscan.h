@@ -266,6 +266,7 @@ DECLARE_EVENT_CLASS(mm_vmscan_lru_isolate_template,
 		isolate_mode_t isolate_mode,
 		int file),
 
+
 	TP_ARGS(order, nr_requested, nr_scanned, nr_taken, isolate_mode, file),
 
 	TP_STRUCT__entry(
